@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import image from "./database.png";
+
 
 const CanvasPage = () => {
     const router = useRouter();
@@ -27,11 +27,11 @@ const CanvasPage = () => {
     const [draggingObject, setDraggingObject] = useState<CanvasObject | null>(null);
     const [linkMode, setLinkMode] = useState(false);
 
-    const cylinderImage = useRef(new Image());
-    cylinderImage.current.src = image.src;
+
+
 
     const drawCanvas = () => {
-        const canvas = canvasRef.current;
+        const canvas = canvasRef?.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
@@ -58,9 +58,6 @@ const CanvasPage = () => {
                 ctx.lineWidth = 2;
                 ctx.strokeRect(obj.x, obj.y, obj.size, obj.size);
             }
-            if (obj.type === 'cylinder') {
-                ctx.drawImage(cylinderImage.current, obj.x, obj.y, obj.size, obj.size);
-            }
         });
     };
 
@@ -77,7 +74,12 @@ const CanvasPage = () => {
     };
 
     const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
-        const canvas = canvasRef.current;
+        const canvas = canvasRef?.current;
+        if (!canvas) {
+            console.warn("Canvas element is not available");
+            return;
+        }
+
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -122,7 +124,13 @@ const CanvasPage = () => {
     const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if (!draggingObject) return;
 
+
         const canvas = canvasRef.current;
+        if (!canvas) {
+            console.warn("Canvas element is not available");
+            return;
+        }
+
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;

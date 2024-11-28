@@ -38,7 +38,7 @@ export default function AuthPage() {
 
             // Redirect or handle success
             router.push('/dashboard')
-        } catch (err) {
+        } catch {
             alert("ERROR")
         } finally {
             setLoading(false)
@@ -68,7 +68,7 @@ export default function AuthPage() {
             // Store token or handle login success
             localStorage.setItem('AytesToken', result.token)
             router.push('/select')
-        } catch (err) {
+        } catch {
             alert("ERROR")
         } finally {
             setLoading(false)

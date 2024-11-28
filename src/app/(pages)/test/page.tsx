@@ -18,8 +18,8 @@ export default function Component() {
     const [auth, setAuth] = useState('')
     const [response, setResponse] = useState('')
     const [responseHeaders, setResponseHeaders] = useState({})
-    const [responseTime, setResponseTime] = useState(null)
-    const [status, setStatus] = useState(null)
+    const [responseTime, setResponseTime] = useState<number | null>(null)
+    const [status, setStatus] = useState<number | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -55,9 +55,14 @@ export default function Component() {
 
             const data = await res.json()
             setResponse(JSON.stringify(data, null, 2))
-        } catch (error: any) {
-            setResponse(`Error: ${error.message}`)
-        } finally {
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setResponse(`Error: ${error.message}`);
+            } else {
+                setResponse("An unknown error occurred.");
+            }
+        }
+        finally {
             setIsLoading(false)
         }
     }
@@ -150,7 +155,7 @@ export default function Component() {
                     <CardContent>
                         {status && (
                             <div className="mb-4">
-                                <Badge variant={status < 400 ? 'success' : 'destructive'}>
+                                <Badge>
                                     Status: {status}
                                 </Badge>
                                 {responseTime && (

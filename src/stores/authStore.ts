@@ -1,4 +1,3 @@
-import { annotateDynamicAccess } from "next/dist/server/app-render/dynamic-rendering";
 import { create } from "zustand";
 
 interface AuthStata {
@@ -30,8 +29,12 @@ const useAuthStore = create<AuthStata>((set) => ({
             const getData = await data.json()
 
             set({ error: "", isAuthentiacted: true, userId: getData.decoded })
-        } catch (error: string | any) {
-            set({ error: error.message, isAuthentiacted: false })
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                set({ error: error.message, isAuthentiacted: false });
+            } else {
+                set({ error: 'An unknown error occurred.', isAuthentiacted: false });
+            }
         }
     }
 }))
